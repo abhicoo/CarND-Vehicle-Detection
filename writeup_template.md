@@ -15,14 +15,12 @@ The goals / steps of this project are the following:
 * Estimate a bounding box for vehicles detected.
 
 [//]: # (Image References)
-[image1]: ./examples/car_not_car.png
-[image2]: ./examples/HOG_example.jpg
-[image3]: ./examples/sliding_windows.jpg
-[image4]: ./examples/sliding_window.jpg
-[image5]: ./examples/bboxes_and_heat.png
-[image6]: ./examples/labels_map.png
-[image7]: ./examples/output_bboxes.png
-[video1]: ./project_video.mp4
+[image1]: ./output_images/car_not_car.png
+[image2]: ./output_images/hog_features.png
+[image3]: ./output_images/multi_scale_and_positive_windows.jpg
+[image4]: ./examples/heatmap.jpg
+[image5]: ./examples/thresholded_heatmap.jpg
+[image6]: ./examples/final_image.png
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
 ###Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
@@ -44,40 +42,43 @@ I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an 
 
 ![alt text][image1]
 
-I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
+I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like. 
 
-Here is an example using the `YCrCb` color space and HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
+I found out that 'YCrCb' color space works best with orientation of 8 and pix_per_cell (8, 8) and cell_per_block (2, 2). I included all the channels to create HOG feature vector. Below is image on how HOG feature looks like for gray scale image.
 
 
 ![alt text][image2]
 
 ####2. Explain how you settled on your final choice of HOG parameters.
 
-I tried various combinations of parameters and...
+I found out that 'YCrCb' color space works best with orientation of 8 and pix_per_cell (8, 8) and cell_per_block (2, 2). I included all the channels to create HOG feature vector. Below is image on how HOG feature looks like for gray scale image.
 
 ####3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
-I trained a linear SVM using...
+I trained a linear SVM using combination of HOG, Spatial Bin and Color Histogram features. I achieved accuracy of more than 99% on test data.
 
 ###Sliding Window Search
 
 ####1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
-I decided to search random window positions at random scales all over the image and came up with this (ok just kidding I didn't actually ;):
+I impplemented multiscale sliding window search. The different scale of windows used was  64, 128, 192. The 64 window size was used on smaller region of image to search for cars near horizion. The overlap used is 0.75, 0.7 and 0.6 respectively.
+
+For the final video i used an optimized version of sliding window search by using HOG subsampling so that we have to calucate HOG features only once.
+I used window size of 64 but scale of 1.0, 1.5 and 1.75.
 
 ![alt text][image3]
 
 ####2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
-Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
+Ultimately I searched on three scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
 
-![alt text][image4]
+![alt text][image3]
 ---
 
 ### Video Implementation
 
 ####1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
-Here's a [link to my video result](./project_video.mp4)
+Here's a [link to my video result](./output_project_video.mp4)
 
 
 ####2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
@@ -86,16 +87,15 @@ I recorded the positions of positive detections in each frame of the video.  Fro
 
 Here's an example result showing the heatmap from a series of frames of video, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the last frame of video:
 
-### Here are six frames and their corresponding heatmaps:
+### Here is a heatmap image along with original image:
 
+![alt text][image4]
+
+### Here is a threholded heatmap image along with original image:
 ![alt text][image5]
 
-### Here is the output of `scipy.ndimage.measurements.label()` on the integrated heatmap from all six frames:
-![alt text][image6]
-
 ### Here the resulting bounding boxes are drawn onto the last frame in the series:
-![alt text][image7]
-
+![alt text][image6]
 
 
 ---
@@ -104,5 +104,4 @@ Here's an example result showing the heatmap from a series of frames of video, t
 
 ####1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
-
+The most important aspect of the project was to create features to train the classifier. The feature vectors are handcoded one thing which can be done to improve the alogrithm is to use more advance classifier like CNN in which the features are learned by the classifier itself. 
