@@ -17,10 +17,10 @@ The goals / steps of this project are the following:
 [//]: # (Image References)
 [image1]: ./output_images/car_not_car.png
 [image2]: ./output_images/hog_features.png
-[image3]: ./output_images/multi_scale_and_positive_windows.jpg
-[image4]: ./examples/heatmap.jpg
-[image5]: ./examples/thresholded_heatmap.jpg
-[image6]: ./examples/final_image.png
+[image3]: ./output_images/multi_scale_and_positive_windows.png
+[image4]: ./output_images/heatmap.png
+[image5]: ./output_images/thresholded_heatmap.png
+[image6]: ./output_images/final_image.png
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
 ###Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
